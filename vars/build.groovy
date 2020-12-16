@@ -22,7 +22,6 @@ def call(Map map) {
             BRANCH_NAME = "${map.BRANCH_NAME}"
             STACK_NAME = "${map.STACK_NAME}"
             COMPOSE_FILE_NAME = "docker-compose-" + "${map.STACK_NAME}" + "-" + "${map.BRANCH_NAME}" + ".yml"
-            DOCKER_HOST = "registry-vpc.cn-hangzhou.aliyuncs.com"
             IMG_NAME = "shzhyt/test"
             DOCKER_IMAGE_NAME = "registry-vpc.cn-hangzhou.aliyuncs.com/shzhyt/test"
             BUILD_TAG = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
