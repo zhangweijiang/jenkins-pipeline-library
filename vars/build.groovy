@@ -25,14 +25,14 @@ def call(Map map) {
             DOCKER_HOST = "registry-vpc.cn-hangzhou.aliyuncs.com"
             IMG_NAME = "shzhyt/test"
             BUILD_TAG = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
-
         }
 
         stages {
             stage('获取代码') {
                 steps {
                     echo "1.Prepare Stage"
-                    echo ${BUILD_TAG}
+                    echo "${IMG_NAME}"
+                    echo "${BUILD_TAG}"
                 }
             }
 
