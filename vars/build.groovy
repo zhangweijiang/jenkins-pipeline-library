@@ -38,7 +38,7 @@ def call(Map map) {
             
             stage('Push') {
                 steps {
-                     sh "docker tag"+" ${DOCKER_IMAGE_NAME}"+":"+"${BUILD_TAG}"+" ${docker_img_name}"+":latest"
+                     sh "docker tag ${DOCKER_IMAGE_NAME}:${BUILD_TAG} ${DOCKER_IMAGE_NAME}:latest"
                      withCredentials([usernamePassword(credentialsId: 'docker-register', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
                         sh "docker login -u ${dockerUser} -p ${dockerPassword} registry-vpc.cn-hangzhou.aliyuncs.com"
                         sh "docker push ${DOCKER_IMAGE_NAME}:latest"
