@@ -35,7 +35,7 @@ def call(Map map) {
             }
             stage('Test') {
                 steps {
-                    sh "echo "2.Test Stage"
+                    sh "echo 2.Test Stage"
                 }
             }
 
