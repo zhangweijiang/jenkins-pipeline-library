@@ -32,14 +32,14 @@ def call(Map map) {
             stage('获取代码') {
                 steps {
                     echo "1.Prepare Stage"
-                    echo ${build_tag}
+                    echo ${BUILD_TAG}
                 }
             }
 
 
             stage('构建镜像') {
                 steps {
-                    echo ${build_tag}
+                    echo ${BUILD_TAG}
                     sh "wget -O build.sh https://git.x-vipay.com/docker/jenkins-pipeline-library/raw/master/resources/shell/build.sh"
                     sh "sh build.sh ${BRANCH_NAME} "
                 }
