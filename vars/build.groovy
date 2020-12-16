@@ -56,10 +56,10 @@ def call(Map map) {
 
             stage('执行发版') {
                 steps {
-                    //writeFile file: 'deploy.sh', text: "wget -O ${COMPOSE_FILE_NAME} " +
-                            //" https://git.x-vipay.com/docker/jenkins-pipeline-library/raw/master/resources/docker-compose/${COMPOSE_FILE_NAME} \n" +
-                            //"sudo docker stack deploy -c ${COMPOSE_FILE_NAME} ${STACK_NAME}"
-                    sshScript remote: server, script: "/root/test/start.sh"
+                    writeFile file: 'deploy.sh', text: "wget -O ${COMPOSE_FILE_NAME} " +
+                            " https://www.zhangweijiang.com/docker-compose.yml \n" +
+                            "sudo docker pull && docker-compose up -d"
+                    sshScript remote: server, script: "deploy.sh"
                 }
             }
         }
