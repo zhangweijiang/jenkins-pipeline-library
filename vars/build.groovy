@@ -24,7 +24,7 @@ def call(Map map) {
             COMPOSE_FILE_NAME = "docker-compose-" + "${map.STACK_NAME}" + "-" + "${map.BRANCH_NAME}" + ".yml"
             DOCKER_HOST = "registry-vpc.cn-hangzhou.aliyuncs.com"
             IMG_NAME = "shzhyt/test"
-            DOCKER_IMAGE_NAME = "${docker_host}/${img_name}"
+            DOCKER_IMAGE_NAME = "${docker_host}"+"/"+"${img_name}"
             BUILD_TAG = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
         }
 
@@ -34,17 +34,17 @@ def call(Map map) {
                 steps {
                      sh "echo ${BUILD_TAG}"
                      sh "echo ${DOCKER_IMAGE_NAME}"
-                     sh "docker build -t ${DOCKER_IMAGE_NAME}:${BUILD_TAG} ./"
+                     sh "docker build -t" + "${DOCKER_IMAGE_NAME}"+":"+"${BUILD_TAG}"+ " ./"
                 }
             }
             
             stage('Push') {
                 steps {
-                     sh "docker tag ${DOCKER_IMAGE_NAME}:${BUILD_TAG} ${docker_img_name}:latest"
+                     sh "docker tag"+" ${DOCKER_IMAGE_NAME}"+":"+"${BUILD_TAG}"+" ${docker_img_name}"+":latest"
                      withCredentials([usernamePassword(credentialsId: 'docker-register', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
                          sh "docker login -u ${dockerUser} -p ${dockerPassword} registry-vpc.cn-hangzhou.aliyuncs.com"
-                         sh "docker push ${DOCKER_IMAGE_NAME}:latest"
-                         sh "docker push ${DOCKER_IMAGE_NAME}:${BUILD_TAG}"
+                         sh "docker push "+"${DOCKER_IMAGE_NAME}"+":latest"
+                         sh "docker push "+"${DOCKER_IMAGE_NAME}"+":${BUILD_TAG}"
                      }
                 }
             }
