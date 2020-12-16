@@ -31,10 +31,8 @@ def call(Map map) {
         stages {
            
             stage('Build') {
-                steps {
-                     sh "echo ${BUILD_TAG}33"
-                     sh "echo ${DOCKER_IMAGE_NAME}"
-                     sh "docker build -t " + "${DOCKER_IMAGE_NAME} "+":"+"${BUILD_TAG}"+ " ./"
+                steps {            
+                     sh "docker build -t ${DOCKER_IMAGE_NAME}:${BUILD_TAG} ./"
                 }
             }
             
@@ -42,9 +40,9 @@ def call(Map map) {
                 steps {
                      sh "docker tag"+" ${DOCKER_IMAGE_NAME}"+":"+"${BUILD_TAG}"+" ${docker_img_name}"+":latest"
                      withCredentials([usernamePassword(credentialsId: 'docker-register', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
-                         sh "docker login -u ${dockerUser} -p ${dockerPassword} registry-vpc.cn-hangzhou.aliyuncs.com"
-                         sh "docker push "+"${DOCKER_IMAGE_NAME}"+":latest"
-                         sh "docker push "+"${DOCKER_IMAGE_NAME}"+":${BUILD_TAG}"
+                        sh "docker login -u ${dockerUser} -p ${dockerPassword} registry-vpc.cn-hangzhou.aliyuncs.com"
+                        sh "docker push ${DOCKER_IMAGE_NAME}:latest"
+                        sh "docker push ${DOCKER_IMAGE_NAME}:${BUILD_TAG}"
                      }
                 }
             }
