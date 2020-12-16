@@ -27,13 +27,24 @@ def call(Map map) {
         stages {
             stage('获取代码') {
                 steps {
-                    git([url: "${REPO_URL}", branch: "${BRANCH_NAME}"])
+                    echo "1.Prepare Stage"
+                    docker_host = "registry-vpc.cn-hangzhou.aliyuncs.com"
+                    img_name = "shzhyt/test"
+                    docker_img_name = "${docker_host}/${img_name}"
+                    echo "docker-img-name: ${docker_img_name}"
+                    script {
+                        build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+                        if (env.BRANCH_NAME != 'master' && env.BRANCH_NAME != null) {
+                            build_tag = "${env.BRANCH_NAME}-${build_tag}"
+                        }
+                    }
                 }
             }
 
 
             stage('构建镜像') {
                 steps {
+                    echo ${build_tag}
                     sh "wget -O build.sh https://git.x-vipay.com/docker/jenkins-pipeline-library/raw/master/resources/shell/build.sh"
                     sh "sh build.sh ${BRANCH_NAME} "
                 }
