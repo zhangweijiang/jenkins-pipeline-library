@@ -28,17 +28,33 @@ def call(Map map) {
         }
 
         stages {
-            stage('获取代码') {
+            stage('Prepare') {
                 steps {
-                    sh "echo ${IMG_NAME}"
+                    sh "echo docker-img-name: ${docker_img_name}"
+                }
+            }
+            stage('Test') {
+                steps {
+                    sh "echo "2.Test Stage"
                 }
             }
 
-
-            stage('构建镜像') {
+            stage('Build') {
                 steps {
-                    sh "wget -O build.sh https://git.x-vipay.com/docker/jenkins-pipeline-library/raw/master/resources/shell/build.sh"
-                    sh "sh build.sh ${BRANCH_NAME} "
+                     sh "echo 3.Build Docker Image Stage"
+                     sh "docker build -t ${docker_img_name}:${build_tag} ./"
+                }
+            }
+            
+            stage('Push') {
+                steps {
+                     sh "echo 4.Deploy jar and Push Docker Image Stage"
+                     sh "docker tag ${docker_img_name}:${build_tag} ${docker_img_name}:latest"
+                     withCredentials([usernamePassword(credentialsId: 'docker-register', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
+                         sh "docker login -u ${dockerUser} -p ${dockerPassword} registry-vpc.cn-hangzhou.aliyuncs.com"
+                         sh "docker push ${docker_img_name}:latest"
+                         sh "docker push ${docker_img_name}:${build_tag}"
+                     }
                 }
             }
 
