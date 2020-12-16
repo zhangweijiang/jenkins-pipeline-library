@@ -28,27 +28,16 @@ def call(Map map) {
         }
 
         stages {
-            stage('Prepare') {
-                steps {
-                    sh "echo docker-img-name: ${docker_img_name}"
-                }
-            }
-            stage('Test') {
-                steps {
-                    sh "echo 2.Test Stage"
-                }
-            }
-
+           
             stage('Build') {
                 steps {
-                     sh "echo 3.Build Docker Image Stage"
                      sh "docker build -t ${docker_img_name}:${build_tag} ./"
                 }
             }
             
             stage('Push') {
                 steps {
-                     sh "echo 4.Deploy jar and Push Docker Image Stage"
+                   
                      sh "docker tag ${docker_img_name}:${build_tag} ${docker_img_name}:latest"
                      withCredentials([usernamePassword(credentialsId: 'docker-register', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
                          sh "docker login -u ${dockerUser} -p ${dockerPassword} registry-vpc.cn-hangzhou.aliyuncs.com"
