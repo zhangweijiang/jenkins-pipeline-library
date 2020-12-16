@@ -41,7 +41,7 @@ def call(Map map) {
                      withCredentials([usernamePassword(credentialsId: 'docker-register', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
                         sh "docker login -u ${dockerUser} -p ${dockerPassword} registry-vpc.cn-hangzhou.aliyuncs.com"
                         sh "docker push ${DOCKER_IMAGE_NAME}:latest"
-                        sh "docker push ${DOCKER_IMAGE_NAME}:${BUILD_TAG}"
+                        //sh "docker push ${DOCKER_IMAGE_NAME}:${BUILD_TAG}"
                      }
                 }
             }
@@ -59,7 +59,7 @@ def call(Map map) {
                     //writeFile file: 'deploy.sh', text: "wget -O ${COMPOSE_FILE_NAME} " +
                             //" https://git.x-vipay.com/docker/jenkins-pipeline-library/raw/master/resources/docker-compose/${COMPOSE_FILE_NAME} \n" +
                             //"sudo docker stack deploy -c ${COMPOSE_FILE_NAME} ${STACK_NAME}"
-                    sshScript remote: server, script: "/root/start.sh"
+                    sshScript remote: server, script: "/root/test/start.sh"
                 }
             }
         }
