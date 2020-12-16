@@ -32,7 +32,7 @@ def call(Map map) {
            
             stage('Build') {
                 steps {
-                     sh "echo ${BUILD_TAG}"
+                     sh "echo ${BUILD_TAG}33"
                      sh "echo ${DOCKER_IMAGE_NAME}"
                      sh "docker build -t" + "${DOCKER_IMAGE_NAME}"+":"+"${BUILD_TAG}"+ " ./"
                 }
