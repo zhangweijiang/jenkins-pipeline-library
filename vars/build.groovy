@@ -22,22 +22,17 @@ def call(Map map) {
             BRANCH_NAME = "${map.BRANCH_NAME}"
             STACK_NAME = "${map.STACK_NAME}"
             COMPOSE_FILE_NAME = "docker-compose-" + "${map.STACK_NAME}" + "-" + "${map.BRANCH_NAME}" + ".yml"
+            DOCKER_HOST = "registry-vpc.cn-hangzhou.aliyuncs.com"
+            IMG_NAME = "shzhyt/test"
+            BUILD_TAG = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+
         }
 
         stages {
             stage('获取代码') {
                 steps {
                     echo "1.Prepare Stage"
-                    docker_host = "registry-vpc.cn-hangzhou.aliyuncs.com"
-                    img_name = "shzhyt/test"
-                    docker_img_name = "${docker_host}/${img_name}"
-                    echo "docker-img-name: ${docker_img_name}"
-                    script {
-                        build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
-                        if (env.BRANCH_NAME != 'master' && env.BRANCH_NAME != null) {
-                            build_tag = "${env.BRANCH_NAME}-${build_tag}"
-                        }
-                    }
+                    echo ${build_tag}
                 }
             }
 
