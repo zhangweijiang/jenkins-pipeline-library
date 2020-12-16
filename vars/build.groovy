@@ -31,13 +31,6 @@ def call(Map map) {
                 }
             }
 
-            stage('编译代码') {
-                steps {
-                    withMaven(maven: 'maven 3.6') {
-                        sh "mvn -U -am clean package -DskipTests"
-                    }
-                }
-            }
 
             stage('构建镜像') {
                 steps {
