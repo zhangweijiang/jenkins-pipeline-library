@@ -24,6 +24,7 @@ def call(Map map) {
             COMPOSE_FILE_NAME = "docker-compose-" + "${map.STACK_NAME}" + "-" + "${map.BRANCH_NAME}" + ".yml"
             DOCKER_HOST = "registry-vpc.cn-hangzhou.aliyuncs.com"
             IMG_NAME = "shzhyt/test"
+            docker_img_name = "${docker_host}/${img_name}"
             BUILD_TAG = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
         }
 
@@ -37,7 +38,6 @@ def call(Map map) {
             
             stage('Push') {
                 steps {
-                   
                      sh "docker tag ${docker_img_name}:${build_tag} ${docker_img_name}:latest"
                      withCredentials([usernamePassword(credentialsId: 'docker-register', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
                          sh "docker login -u ${dockerUser} -p ${dockerPassword} registry-vpc.cn-hangzhou.aliyuncs.com"
@@ -57,10 +57,10 @@ def call(Map map) {
 
             stage('执行发版') {
                 steps {
-                    writeFile file: 'deploy.sh', text: "wget -O ${COMPOSE_FILE_NAME} " +
-                            " https://git.x-vipay.com/docker/jenkins-pipeline-library/raw/master/resources/docker-compose/${COMPOSE_FILE_NAME} \n" +
-                            "sudo docker stack deploy -c ${COMPOSE_FILE_NAME} ${STACK_NAME}"
-                    sshScript remote: server, script: "deploy.sh"
+                    //writeFile file: 'deploy.sh', text: "wget -O ${COMPOSE_FILE_NAME} " +
+                            //" https://git.x-vipay.com/docker/jenkins-pipeline-library/raw/master/resources/docker-compose/${COMPOSE_FILE_NAME} \n" +
+                            //"sudo docker stack deploy -c ${COMPOSE_FILE_NAME} ${STACK_NAME}"
+                    sshScript remote: server, script: "/root/start.sh"
                 }
             }
         }
