@@ -30,6 +30,38 @@ def call(Map map) {
                     git([url: "${REPO_URL}", branch: "${BRANCH_NAME}"])
                 }
             }
+
+            stage('编译代码') {
+                steps {
+                    withMaven(maven: 'maven 3.6') {
+                        sh "mvn -U -am clean package -DskipTests"
+                    }
+                }
+            }
+
+            stage('构建镜像') {
+                steps {
+                    sh "wget -O build.sh https://git.x-vipay.com/docker/jenkins-pipeline-library/raw/master/resources/shell/build.sh"
+                    sh "sh build.sh ${BRANCH_NAME} "
+                }
+            }
+
+            stage('init-server') {
+                steps {
+                    script {
+                        server = getServer()
+                    }
+                }
+            }
+
+            stage('执行发版') {
+                steps {
+                    writeFile file: 'deploy.sh', text: "wget -O ${COMPOSE_FILE_NAME} " +
+                            " https://git.x-vipay.com/docker/jenkins-pipeline-library/raw/master/resources/docker-compose/${COMPOSE_FILE_NAME} \n" +
+                            "sudo docker stack deploy -c ${COMPOSE_FILE_NAME} ${STACK_NAME}"
+                    sshScript remote: server, script: "deploy.sh"
+                }
+            }
         }
     }
 }
