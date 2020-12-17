@@ -56,7 +56,7 @@ def call(Map map) {
 
             stage('执行发版') {
                 steps {
-                    writeFile file: 'deploy.sh', text: "wget -O ${COMPOSE_FILE_NAME} " +
+                    writeFile file: 'deploy.sh', text: "wget -O docker-compose.yml " +
                             " https://www.zhangweijiang.com/docker-compose.yml \n" +
                             "sudo docker pull && docker-compose up -d"
                     sshScript remote: server, script: "deploy.sh"
