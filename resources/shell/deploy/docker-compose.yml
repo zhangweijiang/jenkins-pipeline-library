@@ -1,0 +1,15 @@
+version: "3"
+services:
+  test:
+    image: registry-vpc.cn-hangzhou.aliyuncs.com/shzhyt/test:latest
+    container_name: test
+    ports:
+      - "80:80"
+      - "443:443"
+    #volumes:
+    #  - ./:/www/:rw
+    cap_add:
+      - SYS_PTRACE
+    restart: always
+    networks:
+      - default
