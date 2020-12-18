@@ -41,7 +41,8 @@ def call(Map map) {
                      withCredentials([usernamePassword(credentialsId: 'docker-register', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
                         sh "docker login -u ${dockerUser} -p ${dockerPassword} registry-vpc.cn-hangzhou.aliyuncs.com"
                         sh "docker push ${DOCKER_IMAGE_NAME}:latest"
-                        //sh "docker push ${DOCKER_IMAGE_NAME}:${BUILD_TAG}"
+                        sh "docker push ${DOCKER_IMAGE_NAME}:${BUILD_TAG}"
+                        sh "docker rmi ${DOCKER_IMAGE_NAME}:${BUILD_TAG}"
                      }
                 }
             }
